@@ -48,7 +48,33 @@ if %ERRORLEVEL% NEQ 0 (
 
 echo Starting ServerNova Admin Panel...
 echo.
+
+REM Check if Node.js is installed
+where node >nul 2>nul
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: Node.js is not installed or not in PATH!
+    echo Please install Node.js from https://nodejs.org/
+    echo.
+    pause
+    exit /b 1
+)
+
+echo Node.js found. Starting server...
 echo Press Ctrl+C to stop the server
 echo.
 
 node server/index.js
+
+REM If we get here, the server stopped - show why
+if %ERRORLEVEL% NEQ 0 (
+    echo.
+    echo ERROR: Server failed to start!
+    echo Please check the error messages above.
+    echo.
+    echo Common issues:
+    echo - Dependencies not installed (run: npm install)
+    echo - Port 3001 already in use
+    echo - Missing configuration
+    echo.
+)
+pause
