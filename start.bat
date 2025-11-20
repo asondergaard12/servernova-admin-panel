@@ -5,11 +5,33 @@ echo ========================================
 echo.
 
 REM Check if .env exists
-if not exist .env (
-    echo ERROR: .env file not found!
-    echo Please run install.bat first or copy .env.example to .env
-    pause
-    exit /b 1
+if not exist ".env" (
+    echo WARNING: .env file not found!
+    echo.
+    echo Attempting to create from .env.example...
+    if exist ".env.example" (
+        copy .env.example .env >nul 2>&1
+        if exist ".env" (
+            echo SUCCESS: .env file created!
+            echo IMPORTANT: Please edit .env and change ADMIN_ACCESS_CODE and SESSION_SECRET
+            echo.
+        ) else (
+            echo ERROR: Could not create .env file automatically.
+            echo.
+            echo Please create .env manually with these contents:
+            echo PORT=3001
+            echo NODE_ENV=production
+            echo ADMIN_ACCESS_CODE=ChangeThisSecureCode123!
+            echo SESSION_SECRET=ChangeThisRandomSecretKey456!
+            echo.
+            pause
+            exit /b 1
+        )
+    ) else (
+        echo ERROR: .env.example not found either!
+        pause
+        exit /b 1
+    )
 )
 
 REM Check if running as Administrator
